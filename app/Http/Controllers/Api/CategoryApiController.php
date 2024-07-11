@@ -47,7 +47,7 @@ class CategoryApiController extends BaseController
                 return response()->json([
                     'data' => null,
                     'message' => $validator->errors(),
-                    'status' => 422
+                    'status' => 400
                 ]);
             }
 
@@ -72,7 +72,7 @@ class CategoryApiController extends BaseController
                 return response()->json([
                     'data' => null,
                     'message' => $validator->errors(),
-                    'status' => 422
+                    'status' => 400
                 ]);
             }
 

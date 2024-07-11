@@ -12,8 +12,8 @@ interface ProductService {
 
     public function update(Request $request);
 
-    public function delete(Request $request);
+    public function delete(Request $request, $id);
 
-    public function detail(Request $request);
+    public function detail(Request $request, $id);
 
 }

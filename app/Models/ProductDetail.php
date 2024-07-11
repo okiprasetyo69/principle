@@ -19,8 +19,15 @@ class ProductDetail extends Model
         'image_name',
     ];
 
+    protected $appends = ['image_url'];
+
     public function category()
     {
         return $this->belongsTo(Product::class, 'product_id','id');
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return asset('/uploads/product/'. $this->image_name);
     }
 }

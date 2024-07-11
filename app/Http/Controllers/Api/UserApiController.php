@@ -55,7 +55,7 @@ class UserApiController extends BaseController
                 return response()->json([
                     'data' => null,
                     'message' => $validator->errors(),
-                    'status' => 422
+                    'status' => 400
                 ]);
             }
 
