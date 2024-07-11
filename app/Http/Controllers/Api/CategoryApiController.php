@@ -37,4 +37,54 @@ class CategoryApiController extends BaseController
         }
     }
 
+    public function create(Request $request){
+        try{
+            $validator = Validator::make($request->all(), [
+                'category_name' => 'required',
+            ]);
+            
+            if($validator->fails()){
+                return response()->json([
+                    'data' => null,
+                    'message' => $validator->errors(),
+                    'status' => 422
+                ]);
+            }
+
+            $category = $this->service->create($request);
+            if($category){
+                return $category;
+            }
+
+        }catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+        }
+    }
+
+    public function delete(Request $request){
+        try{
+            $validator = Validator::make($request->all(), [
+                'id' => 'required',
+            ]);
+            
+            if($validator->fails()){
+                return response()->json([
+                    'data' => null,
+                    'message' => $validator->errors(),
+                    'status' => 422
+                ]);
+            }
+
+            $category = $this->service->delete($request);
+            if($category){
+                return $category;
+            }
+
+        }catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+        }
+    }
+
 }

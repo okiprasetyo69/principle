@@ -29,10 +29,10 @@ class CategoryRepositoryEloquent implements CategoryService {
     public function getCategory(Request $request){
         try{
             
-            $category = Category::orderBy('category_name', 'ASC');
+            $category = $this->category::orderBy('category_name', 'ASC');
           
             if($request->category_name != null){
-                $category->where("category_name", "like", "%" . $request->category_name. "%");
+                $category = $category->where("category_name", "like", "%" . $request->category_name. "%");
             }
 
             $category = $category->get();
@@ -43,7 +43,7 @@ class CategoryRepositoryEloquent implements CategoryService {
         catch(Exception $ex){
             Log::error($ex->getMessage());
             return false;
-         }
+        }
     }
 
     public function create(Request $request){

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\CategoryApiController;
+use App\Http\Controllers\Api\ProductApiController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,4 +32,11 @@ Route::controller(UserApiController::class)->group(function() {
 Route::controller(CategoryApiController::class)->group(function() {
     Route::get('/category', 'getCategory')->name('category.data');
     Route::post('/category', 'create')->name('category.register');
+    Route::delete('/category', 'delete')->name('category.delete');
+});
+
+// Product
+Route::controller(ProductApiController::class)->group(function() {
+    Route::get('/product', 'getProduct')->name('product.data');
+    Route::post('/product', 'create')->name('product.register');
 });
