@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\CategoryApiController;
 use App\Http\Controllers\Api\ProductApiController;
+use App\Http\Controllers\Api\PurchaseOrderApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +43,12 @@ Route::controller(ProductApiController::class)->group(function() {
     Route::post('/product/update', 'update')->name('product.update');
     Route::get('/product/{id}', 'detail')->name('product.detail');
     Route::delete('/product/{id}', 'delete')->name('product.delete');
+});
+
+// Purchase Order
+Route::controller(PurchaseOrderApiController::class)->group(function() {
+    Route::get('/purchase-order', 'getPurchaseOrder')->name('purchase-order.data');
+    Route::post('/purchase-order', 'create')->name('purchase-order.create');
+    Route::get('/purchase-order/{id}', 'detail')->name('purchase-order.detail');
+    Route::delete('/purchase-order/{id}', 'delete')->name('purchase-order.delete');
 });

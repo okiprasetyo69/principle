@@ -9,11 +9,12 @@ use Illuminate\Pagination\Paginator;
 use App\Services\Interfaces\UserService;
 use App\Services\Interfaces\CategoryService;
 use App\Services\Interfaces\ProductService;
+use App\Services\Interfaces\PurchaseOrderService;
 
 use App\Services\Repositories\UserRepositoryEloquent;
 use App\Services\Repositories\CategoryRepositoryEloquent;
 use App\Services\Repositories\ProductRepositoryEloquent;
-
+use App\Services\Repositories\PurchaseOrderRepositoryEloquent;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         UserService::class => UserRepositoryEloquent::class,
         CategoryService::class => CategoryRepositoryEloquent::class,
         ProductService::class => ProductRepositoryEloquent::class,
+        PurchaseOrderService::class => PurchaseOrderRepositoryEloquent::class,
     ];
 
     public function provides() : array{
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
             UserService::class,
             CategoryService::class,
             ProductService::class,
+            PurchaseOrderService::class,
         ];
     }
 

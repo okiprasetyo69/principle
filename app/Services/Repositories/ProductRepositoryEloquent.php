@@ -154,6 +154,13 @@ class ProductRepositoryEloquent implements ProductService {
     public function detail(Request $request, $id){
         try{
             $product = $this->product::with('category', 'items')->where("id", $id)->first();
+
+            if($product == null){
+                return response()->json([
+                    'message' => 'Data not found',
+                    'status' => 400
+                ]);
+            }
             return response()->json([
                 'status' => 200,
                 'message' => true,
