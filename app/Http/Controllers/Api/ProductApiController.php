@@ -118,9 +118,9 @@ class ProductApiController extends BaseController
         }
     }
 
-    public function delete(Request $request, $id){
+    public function delete(Request $request){
         try{
-            $validator = Validator::make(['id' => $id], [
+            $validator = Validator::make($request->all(), [
                 'id' => 'required',
             ]);
     
@@ -131,7 +131,7 @@ class ProductApiController extends BaseController
                 ]);
             }
     
-            $product = $this->service->delete($request, $id);
+            $product = $this->service->delete($request);
             return $product;
         }catch(Exception $ex){
             Log::error($ex->getMessage());

@@ -9,4 +9,6 @@ interface UserService {
     public function getUsers(Request $request);
 
     public function register(Request $request);
+
+    public function getDistributor(Request $request);
 }

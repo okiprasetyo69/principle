@@ -11,6 +11,8 @@ use App\Services\Interfaces\CategoryService;
 
 class CategoryController extends Controller
 {
-   
+   public function index(Request $request){
+       return view("principal.category.index");
+   }
 
 }

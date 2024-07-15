@@ -3,6 +3,7 @@
 namespace App\Services\Repositories;
 
 use App\Models\User;
+use App\Services\Constants\UserConstantInterface;
 use App\Services\Interfaces\UserService;
 
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class UserRepositoryEloquent implements UserService {
         }catch(Exception $ex){
             Log::error($ex->getMessage());
             return false;
-         }
+        }
     }
 
     public function register(Request $request){
@@ -66,6 +67,28 @@ class UserRepositoryEloquent implements UserService {
                 'message' => true,
                 'data' => $user
             ]); 
+        }catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+         }
+    }
+
+    public function getDistributor(Request $request){
+        try{
+            $user = $this->user::with('role')->where('role_id', UserConstantInterface::DISTRIBUTOR);
+            
+            if($request->company_name != null){
+                $user =  $user->where("company_name", "like", "%" . $request->company_name. "%");
+            }
+
+            $user = $user->get();
+
+            if($user != null){
+                $datatables = Datatables::of( $user);
+                return $datatables->make( true );
+            }
+
+            return false;
         }catch(Exception $ex){
             Log::error($ex->getMessage());
             return false;

@@ -35,6 +35,10 @@ class CategoryRepositoryEloquent implements CategoryService {
                 $category = $category->where("category_name", "like", "%" . $request->category_name. "%");
             }
 
+            if($request->id != null){
+                $category = $category->where("id", $request->id);
+            }
+
             $category = $category->get();
 
             $datatables = Datatables::of($category);

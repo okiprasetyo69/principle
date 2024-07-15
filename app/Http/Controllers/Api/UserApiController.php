@@ -38,6 +38,19 @@ class UserApiController extends BaseController
         }
     }
 
+    public function getDistributor(Request $request){
+        try{
+            $userDistributor = $this->service->getDistributor($request);
+            if($userDistributor){
+                return $userDistributor;
+            }
+            return false;
+        }catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+        }
+    }
+
     public function register(Request $request){
         try{
 

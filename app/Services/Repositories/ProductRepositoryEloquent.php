@@ -40,6 +40,10 @@ class ProductRepositoryEloquent implements ProductService {
                 $product = $product->where("category_id", $request->category_id);
             }
 
+            if($request->id != null){
+                $product = $product->where("id", $request->id);
+            }
+
             $product = $product->get();
 
             $datatables = Datatables::of($product);
@@ -172,9 +176,9 @@ class ProductRepositoryEloquent implements ProductService {
         }
     }
 
-    public function delete(Request $request, $id){
+    public function delete(Request $request){
         try{
-            $product = $this->product::where("id", $id)->first();
+            $product = $this->product::where("id", $request->id)->first();
 
             if($product == null){
                 return response()->json([
@@ -182,10 +186,11 @@ class ProductRepositoryEloquent implements ProductService {
                     'status' => 400
                 ]);
             }
+            
+            $productDetail = ProductDetail::where("product_id", $request->id)->first();
 
-            $productDetail = ProductDetail::where("product_id", $id)->first();
             $existFile = File::exists(public_path('uploads/product/'.$productDetail->image_name.'')); 
-            if($existFile){
+            if($existFile != null){
                 File::delete(public_path('uploads/product/'.$productDetail->image_name.''));
             }
             

@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // User
 Route::controller(UserApiController::class)->group(function() {
     Route::get('/user', 'getUser')->name('user.data');
+    Route::get('/user/distributor', 'getDistributor')->name('user.distributor');
     Route::post('/user', 'register')->name('user.register');
 });
 
@@ -42,7 +43,7 @@ Route::controller(ProductApiController::class)->group(function() {
     Route::post('/product', 'create')->name('product.create');
     Route::post('/product/update', 'update')->name('product.update');
     Route::get('/product/{id}', 'detail')->name('product.detail');
-    Route::delete('/product/{id}', 'delete')->name('product.delete');
+    Route::delete('/product', 'delete')->name('product.delete');
 });
 
 // Purchase Order
