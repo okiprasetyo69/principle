@@ -37,4 +37,17 @@ class DistributorStockApiController extends BaseController
         }
     }
 
+    public function getStockPerDistributor(Request $request){
+        try{
+            $distributorStock = $this->service->getStockPerDistributor($request);
+            if($distributorStock != null){
+                return $distributorStock;
+            }
+            return false;
+        }catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+        }
+    }
+
 }

@@ -34,3 +34,5 @@ Route::get('/product/{id}', [ProductController::class, 'edit'])->name('product.e
 Route::get('/product/new', [ProductController::class, 'add'])->name('product.new')->middleware('principal');
 
 Route::get('/distributor', [DistributorController::class, 'index'])->name('distributor')->middleware('distributor');
+Route::get('/distributor/stock', [DistributorController::class, 'distributorStock'])->name('distributor.stock')->middleware('distributor');
+Route::get('/distributor/purhcase-order', [DistributorController::class, 'distributorPurchaseOrder'])->name('distributor.purhcase-order')->middleware('distributor');

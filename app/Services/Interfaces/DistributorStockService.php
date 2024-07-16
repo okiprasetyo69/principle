@@ -8,4 +8,6 @@ interface DistributorStockService {
 
     public function getDistributorStock(Request $request);
 
+    //public function getStockPerDistributor(Request $request, $id);
+
 }

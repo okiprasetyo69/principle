@@ -58,4 +58,5 @@ Route::controller(PurchaseOrderApiController::class)->group(function() {
 // Distributor Stock
 Route::controller(DistributorStockApiController::class)->group(function() {
     Route::get('/distributor/stock', 'getDistributorStockItem')->name('distributor.stock');
+    Route::get('/stock/per-distributor', 'getStockPerDistributor')->name('stock.per-distributor');
 });
