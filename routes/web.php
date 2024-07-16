@@ -26,6 +26,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/principal', [PrincipalController::class, 'index'])->name('principal')->middleware('principal');
 Route::get('/list-distributor', [PrincipalController::class, 'listDistributor'])->name('principal.list-distributor')->middleware('principal');
+Route::get('/distributor/stock/{id}', [PrincipalController::class, 'monitorStockOnDistributor'])->name('principal.distributor.stock')->middleware('principal');
+
 Route::get('/category', [CategoryController::class, 'index'])->name('category')->middleware('principal');
 Route::get('/product', [ProductController::class, 'index'])->name('product')->middleware('principal');
 Route::get('/product/{id}', [ProductController::class, 'edit'])->name('product.edit')->middleware('principal');

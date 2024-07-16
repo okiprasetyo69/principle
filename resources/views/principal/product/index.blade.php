@@ -302,7 +302,6 @@
     }
 
     function detail(id){
-        console.log(id)
         $.ajax({
             type: "GET",
             url: "/api/product",
@@ -320,6 +319,7 @@
             }
         });
     }
+
     function confirm(id){
         $.confirm({
             title: 'Pesan ',

@@ -81,6 +81,10 @@ class UserRepositoryEloquent implements UserService {
                 $user =  $user->where("company_name", "like", "%" . $request->company_name. "%");
             }
 
+            if($request->id != null){
+                $user =  $user->where("id", $request->id);
+            }
+
             $user = $user->get();
 
             if($user != null){

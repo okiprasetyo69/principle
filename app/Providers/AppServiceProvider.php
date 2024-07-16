@@ -10,11 +10,13 @@ use App\Services\Interfaces\UserService;
 use App\Services\Interfaces\CategoryService;
 use App\Services\Interfaces\ProductService;
 use App\Services\Interfaces\PurchaseOrderService;
+use App\Services\Interfaces\DistributorStockService;
 
 use App\Services\Repositories\UserRepositoryEloquent;
 use App\Services\Repositories\CategoryRepositoryEloquent;
 use App\Services\Repositories\ProductRepositoryEloquent;
 use App\Services\Repositories\PurchaseOrderRepositoryEloquent;
+use App\Services\Repositories\DistributorStockRepositoryEloquent;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         CategoryService::class => CategoryRepositoryEloquent::class,
         ProductService::class => ProductRepositoryEloquent::class,
         PurchaseOrderService::class => PurchaseOrderRepositoryEloquent::class,
+        DistributorStockService::class => DistributorStockRepositoryEloquent::class,
     ];
 
     public function provides() : array{
@@ -32,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
             CategoryService::class,
             ProductService::class,
             PurchaseOrderService::class,
+            DistributorStockService::class,
         ];
     }
 

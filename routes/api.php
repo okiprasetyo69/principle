@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\CategoryApiController;
 use App\Http\Controllers\Api\ProductApiController;
 use App\Http\Controllers\Api\PurchaseOrderApiController;
+use App\Http\Controllers\Api\DistributorStockApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +53,9 @@ Route::controller(PurchaseOrderApiController::class)->group(function() {
     Route::post('/purchase-order', 'create')->name('purchase-order.create');
     Route::get('/purchase-order/{id}', 'detail')->name('purchase-order.detail');
     Route::delete('/purchase-order/{id}', 'delete')->name('purchase-order.delete');
+});
+
+// Distributor Stock
+Route::controller(DistributorStockApiController::class)->group(function() {
+    Route::get('/distributor/stock', 'getDistributorStockItem')->name('distributor.stock');
 });
