@@ -59,6 +59,7 @@
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Nomor PO</th>
+                                            <th scope="col">Produk</th>
                                             <th scope="col">Qty</th>
                                             <th scope="col">Tgl PO</th>
                                             <th scope="col">Deskripsi</th>
@@ -136,6 +137,7 @@
                     { data: null },
                     { data: null },
                     { data: null },
+                    { data: null },
                 ],
                 columnDefs: [
                     {
@@ -152,6 +154,20 @@
                         searchable: false,
                         orderable: false,
                         createdCell: function (td, cellData, rowData, row, col) {
+                            var poNumber = ""
+                            if(rowData.purchase_order_number != null){
+                                poNumber = rowData.purchase_order_number
+                            } else {
+                                poNumber = "-"
+                            }
+                            $(td).html(poNumber);
+                        },
+                    },
+                    {
+                        targets: 2,
+                        searchable: false,
+                        orderable: false,
+                        createdCell: function (td, cellData, rowData, row, col) {
                             var product = ""
                             if(rowData.product_id != null){
                                 product = rowData.product.product_name
@@ -159,10 +175,11 @@
                                 product = "-"
                             }
                             $(td).html(product);
+                            
                         },
                     },
                     {
-                        targets: 2,
+                        targets: 3,
                         searchable: false,
                         orderable: false,
                         createdCell: function (td, cellData, rowData, row, col) {
@@ -174,7 +191,7 @@
                         },
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         searchable: false,
                         orderable: false,
                         createdCell: function (td, cellData, rowData, row, col) {
@@ -186,7 +203,7 @@
                         },
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         searchable: false,
                         orderable: false,
                         createdCell: function (td, cellData, rowData, row, col) {
