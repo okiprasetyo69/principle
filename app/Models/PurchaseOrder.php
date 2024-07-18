@@ -23,7 +23,8 @@ class PurchaseOrder extends Model
         'purchase_order_date',
         'verified_date',
         'vefified_by',
-        'status'
+        'status',
+        'description'
     ];
 
     public function distributor()

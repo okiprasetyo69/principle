@@ -42,7 +42,6 @@ class PurchaseOrderApiController extends BaseController
             $validator = Validator::make($request->all(), [
                 'product_id' => 'required',
                 'distributor_id' => 'required',
-                'product_id' => 'required',
                 'qty' => 'required',
             ]);
             

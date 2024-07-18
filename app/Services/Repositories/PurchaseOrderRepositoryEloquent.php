@@ -103,6 +103,8 @@ class PurchaseOrderRepositoryEloquent implements PurchaseOrderService {
             $purchaseOrder->status = $status;
             $purchaseOrder->verified_date = $verifiedDate;
             $purchaseOrder->verified_by = $verifiedBy;
+            $purchaseOrder->description = $request->description;
+
 
             $purchaseOrder->save();
 

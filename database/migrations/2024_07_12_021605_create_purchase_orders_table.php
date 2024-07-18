@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('verified_date')->nullable();
             $table->bigInteger('verified_by')->nullable();
             $table->integer('status')->nullable(); // 0 : In Order , 1 : Verified by principal
+            $table->text('description')->nullable(); // 0 : In Order , 1 : Verified by principal
             $table->timestamps();
         });
     }

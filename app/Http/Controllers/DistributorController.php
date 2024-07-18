@@ -29,6 +29,12 @@ class DistributorController extends Controller
     }
 
     public function distributorPurchaseOrder(Request $request){
-        return view("distributor.purchase_order.index");
+        $user = Auth::user();
+        return view("distributor.purchase_order.index", compact("user"));
+    }
+
+    public function addPurchaseOrder(Request $request){
+        $user = Auth::user();
+        return view("distributor.purchase_order.add", compact("user"));
     }
 }
