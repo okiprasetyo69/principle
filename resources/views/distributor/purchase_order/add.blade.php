@@ -67,7 +67,7 @@
                             <div class="col-md-6">
                                 <label for="">Harga</label>
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" name="price" id="price" >
+                                    <input type="text" class="form-control" name="price" id="price" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -140,6 +140,12 @@
                 }
             });
         })
+
+        $("#product_id").on("change", function(e){
+            e.preventDefault()
+            var productId = this.value
+            getPriceProduct(productId)
+        })
     });
 
     function getProduct(){
@@ -162,6 +168,22 @@
                         $("#product_id").append(option);
                     }
                 }
+            }
+        });
+    }
+
+    function getPriceProduct(product_id = null){
+        $.ajax({
+            type: "GET",
+            url: "/api/product",
+            data : {
+                id : product_id
+            },
+            dataType: "JSON",
+            success: function (response) {
+                var data = response['data'][0]
+                var price = parseInt(data.price).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+                $("#price").val(price)
             }
         });
     }
