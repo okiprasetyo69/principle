@@ -116,7 +116,7 @@
                     previous: "‹",
                     next: "›",
                 },
-                info: "Menampilkan _START_ dari _END_ dari _TOTAL_ Produk",
+                info: "Menampilkan _START_ dari _END_ dari _TOTAL_ PO",
                 aria: {
                         paginate: {
                             previous: "Previous",
