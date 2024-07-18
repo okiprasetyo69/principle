@@ -41,76 +41,61 @@
                     </nav>
                     <div class="row">
                         <div class="col-md-4">
-                            Management Purchase Order
+                            Tambah Purchase Order
                         </div>
                     </div>
-
-                    <div class="row mt-2" id="card-product">
-                       
-                        
+                    <div class="row mt-4">
+                        <form action="#" id="frm-add-purchase-order" class="row g-3"> 
+                            @csrf
+                            <input type="hidden" id="distributor_id" value="{{ $user->id }}"/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Produk</label>
+                                    <div class="form-floating">
+                                        <select class="form-control" name="product_id" id="product_id"> 
+                                                <option value=""> -Pilih Produk- </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Qty</label>
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" name="qty" id="qty" >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Harga</label>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="price" id="price" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Keterangan</label>
+                                <div class="form-floating">
+                                   <textarea class="form-control" name="description" id="description"></textarea>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-success btn-save">Simpan</button>
+                                <button type="reset" class="btn btn-secondary btn-reset">Reset</button>
+                            </div>
+                        </form>
                     </div>
-                   
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Modal -->
-<div class="modal fade" id="purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Tambah Kategori</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-            <form action="#" id="frm-add-purchase-order">
-                @csrf
-                <div class="modal-body">
-                    <input type="hidden" name="product_id" id="product_id" class="form-control" />
-                    <input type="hidden" id="distributor_id" value="{{ $user->id }}"/>
-                    <div class="row">
-                        <div class="col-md-12 mt-2">
-                            <label> Quantity</label>
-                            <input type="number" class="form-control" name="qty" id="qty" >
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mt-2">
-                            <label> Keterangan </label>
-                            <textarea class="form-control" name="description" id="description"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btn-close">Close</button>
-                    <button type="submit" class="btn btn-primary" id="btn-save">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
 @endsection
-
 <script type="text/javascript">
 
     $(document).ready(function () {
 
         getProduct()
 
-         // Close Modal
-         $("#btn-close").click(function(e){
-            e.preventDefault()
-            $("#purchaseOrderModal").modal("hide")
-        })
-
         $("#frm-add-purchase-order").on("submit", function(e){
             e.preventDefault()
-
             if($("#product_id").val() == ""){
                 $.alert({
                     title: 'Pesan !',
@@ -132,7 +117,7 @@
                 url: "/api/purchase-order",
                 data: {
                     distributor_id : $("#distributor_id").val(),
-                    product_id : $("#product_id").val(),
+                    product_id : $("#product_id option:selected").val(),
                     qty :  $("#qty").val(),
                     description : $("#description").val(),
                 },
@@ -156,7 +141,11 @@
             });
         })
 
-    
+        $("#product_id").on("change", function(e){
+            e.preventDefault()
+            var productId = this.value
+            getPriceProduct(productId)
+        })
     });
 
     function getProduct(){
@@ -166,36 +155,38 @@
             data : "data",
             dataType: "JSON",
             success: function (response) {
-                var data = response.data
-                $("#card-product").html("")
-                var cardHtml = ""
-                $.each(data, function (i, val) { 
-                    console.log(val)
-                    cardHtml += `<div class="col-md-4">
-                            <div class="card">
-                                <img class="card-img-top" src=`+ val.items[0].image_url +`>
-                                <div class="card-body">
-                                    <h5 class="card-title">`+ val.category.category_name+` - `+val.product_name+`</h5>
-                                    <p class="card-text"> Harga : `+ val.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }) +` </p>
-                                    <p class="card-text"> `+ val.items[0].description+` </p>
-                                    <button type="button" class="btn btn-md btn-primary" onclick=orderNow(`+val.id+`)>Pesan Sekarang</button>
-                                </div>
-                            </div>
-                        </div>`
-                });
-                $("#card-product").append(cardHtml)
-              
+                $("#product_id").html("");
+                var len = 0;
+
+                if(response['data'] != null) {
+                    len = response['data'].length
+                    for(i = 0; i < len; i++) {
+                        var selected = ""
+                        var id = response['data'][i].id
+                        var product_name = response['data'][i].product_name
+                        var option = "<option value='"+id+"' "+selected+">"+product_name+"</option>";
+                        $("#product_id").append(option);
+                    }
+                }
             }
         });
     }
 
-    function orderNow(id){
-        $("#purchaseOrderModal").modal("show")
-        $(".modal-title").text("Pesan")
-        $("#btn-save").text("Checkout")
-        $("#product_id").val(id)
+    function getPriceProduct(product_id = null){
+        $.ajax({
+            type: "GET",
+            url: "/api/product",
+            data : {
+                id : product_id
+            },
+            dataType: "JSON",
+            success: function (response) {
+                var data = response['data'][0]
+                var price = parseInt(data.price).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+                $("#price").val(price)
+            }
+        });
     }
-
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
