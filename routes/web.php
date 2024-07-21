@@ -5,6 +5,7 @@ use App\Http\Controllers\PrincipalController;
 use App\Http\Controllers\DistributorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
 Route::get('/principal', [PrincipalController::class, 'index'])->name('principal')->middleware('principal');
 Route::get('/list-distributor', [PrincipalController::class, 'listDistributor'])->name('principal.list-distributor')->middleware('principal');
 Route::get('/distributor/stock/{id}', [PrincipalController::class, 'monitorStockOnDistributor'])->name('principal.distributor.stock')->middleware('principal');
@@ -39,3 +41,7 @@ Route::get('/distributor/product/load-more', [DistributorController::class, 'loa
 Route::get('/distributor/purchase-order', [DistributorController::class, 'distributorPurchaseOrder'])->name('distributor.purhcase-order')->middleware('distributor');
 Route::get('/distributor/purchase-order/new', [DistributorController::class, 'addPurchaseOrder'])->name('distributor.purhcase-order.add')->middleware('distributor');
 Route::get('/distributor/{product_name}/{id}', [DistributorController::class, 'detailProduct'])->name('distributor.detail.product')->middleware('distributor');
+
+Route::get('/forbidden', function () {
+    return view('forbidden');
+})->name('forbidden');
