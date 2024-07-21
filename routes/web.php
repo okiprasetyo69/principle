@@ -35,5 +35,7 @@ Route::get('/product/new', [ProductController::class, 'add'])->name('product.new
 
 Route::get('/distributor', [DistributorController::class, 'index'])->name('distributor')->middleware('distributor');
 Route::get('/distributor/stock', [DistributorController::class, 'distributorStock'])->name('distributor.stock')->middleware('distributor');
+Route::get('/distributor/product/load-more', [DistributorController::class, 'loadMoreProductPaginate'])->name('distributor.product.load-more')->middleware('distributor');
 Route::get('/distributor/purchase-order', [DistributorController::class, 'distributorPurchaseOrder'])->name('distributor.purhcase-order')->middleware('distributor');
 Route::get('/distributor/purchase-order/new', [DistributorController::class, 'addPurchaseOrder'])->name('distributor.purhcase-order.add')->middleware('distributor');
+Route::get('/distributor/{product_name}/{id}', [DistributorController::class, 'detailProduct'])->name('distributor.detail.product')->middleware('distributor');

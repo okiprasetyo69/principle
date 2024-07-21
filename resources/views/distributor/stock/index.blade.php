@@ -2,14 +2,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-<style>
-    .ellipsis-btn {
-        border: none;
-        background: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-    }
-</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
@@ -33,6 +25,7 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                             <div class="navbar-nav">
+                                <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}">
                                 <a class="nav-item nav-link" href="/distributor"> Halaman utama</a>
                                 <a class="nav-item nav-link active" href="/distributor/stock"> Stock</a>
                                 <a class="nav-item nav-link" href="/distributor/purchase-order">Purchase Order</a>                          
@@ -44,34 +37,24 @@
                             Monitor Stock  {{ $user->company_name }}
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6">
-                            <label> Cari Produk</label>
-                            <select name="product_id" id="product_id" class="form-control"> 
-                                <option value=""> - Pilih Produk -</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-12 mt-2">
-                            <div class="responsive">
-                                <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}">
-                                <table class="table table-hover" id="stock-distributor-table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Produk</th>
-                                            <th scope="col">Qty</th>
-                                            <th scope="col">Harga</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
+                    <form method="GET" action="{{ route('distributor.stock') }}"> 
+                        <div class="row mt-2">
+                            <div class="col-md-4">
+                                <label> Cari Produk</label>
+                                <input type="text" class="form-control" id="search_product" name="search_product" placeholder="Masukkan nama produk" autofocus />
+                            </div>
+                            <div class="col-md-2"> 
+                                <button type="submit" class="btn btn-success mt-4" id="btn-search" style="border-radius:50px;"> <i class="bi bi-search"></i> Cari </button>
                             </div>
                         </div>
+                    </form>
+                    <div class="row mt-4" id="data-product">
+                        
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12 text-center">
+                            <button class="btn btn-sm btn-primary btn-block" id="load-more">Load More</button>
+                        </div>                   
                     </div>
                 </div>
             </div>
@@ -80,153 +63,62 @@
 </div>
 @endsection
 <script type="text/javascript">
-    var table, user_id, product_id
-
+    
+    var nextCursor, productName
     $(document).ready(function () {
-        user_id = $("#user_id").val()
-        getStockDistributor(user_id)
-        getProduct()
-        $("#product_id").on("change", function(e){
+        
+        loadProduct();
+     
+        $('#load-more').click(function(e) {
             e.preventDefault()
-            product_id = $("#product_id option:selected").val()
-            getStockDistributor(user_id, product_id)
+            loadProduct(nextCursor);
+        });
+
+        $("#btn-search").on("click", function(e){
+            e.preventDefault()
+            productName = $("#search_product").val()
+            if(productName != ''){
+                $("#data-product").empty()
+                loadProduct(null, productName)
+            } else {
+                $("#data-product").empty()
+                loadProduct()
+            }
+            
         })
+        
     });
 
-    function getStockDistributor(user_id, product_id = null){
-        if (table != null) {
-            table.destroy();
-        }
-
-        table =  $("#stock-distributor-table").DataTable(
-           {
-                lengthChange: false,
-                searching: false,
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                bAutoWidth: true,
-                scrollCollapse : true,
-                ordering: false,
-                language: {
-                emptyTable: "Data tidak tersedia",
-                zeroRecords: "Tidak ada data yang ditemukan",
-                infoFiltered: "",
-                infoEmpty: "",
-                paginate: {
-                    previous: "‹",
-                    next: "›",
-                },
-                info: "Menampilkan _START_ dari _END_ dari _TOTAL_ Produk",
-                aria: {
-                        paginate: {
-                            previous: "Previous",
-                            next: "Next",
-                        },
-                    },
-                },
-                ajax:{
-                    url :  '/api/stock/per-distributor',
-                    type: "GET",
-                    data: {
-                        user_id : user_id,
-                        product_id: product_id,
-                    }
-                },
-                columns: [
-                    { data: null,  width: "5%",},
-                    { data: null, },
-                    { data: null },
-                    { data: null },
-                    { data: null },
-                ],
-                columnDefs: [
-                    {
-                        targets: 0,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).addClass("text-center");
-                            $(td).html(table.page.info().start + row + 1);
-                        },
-                    },
-                    {
-                        targets: 1,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            var product = ""
-                            if(rowData.product_id != null){
-                                product = rowData.product.product_name
-                            } else {
-                                product = "-"
-                            }
-                            $(td).html(product);
-                        },
-                    },
-                    {
-                        targets: 2,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            var qty = 0
-                            if(rowData.qty != null){
-                                qty = rowData.qty.toLocaleString('id-ID')
-                            }
-                            $(td).html(qty);
-                        },
-                    },
-                    {
-                        targets: 3,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            var price = 0
-                            if(rowData.product_id != null){
-                                price = parseInt(rowData.product.price)
-                            }
-                            $(td).html(price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
-                        },
-                    },
-                    {
-                        targets: 4,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            var total_price = 0
-                            if(rowData.total_price != null){
-                                total_price = rowData.total_price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
-                            }
-                            $(td).html(total_price);
-                        },
-                    },
-                ]
-           }
-        )
-    }
-
-    function getProduct(product_id = null){
+    function loadProduct(cursor = null, productName= null){
         $.ajax({
             type: "GET",
-            url: "/api/product",
-            data : "data",
-            dataType: "JSON",
+            url: "/distributor/product/load-more",
+            data: {
+                cursor : cursor,
+                product_name : productName
+            },
             success: function (response) {
+                nextCursor = response.next_cursor;
                 var data = response.data
-                $("#product_id").html("");
-                var len = 0;
-                if(response['data'] != null) {
-                    len = response['data'].length
-                    for(i = 0; i < len; i++) {
-                        var selected = ""
-                        var id = response['data'][i].id
-                        var product_name = response['data'][i].product_name
-                        if(id == product_id){
-                            selected = "selected"
-                        }
-                        var option = "<option value='"+id+"' "+selected+">"+product_name+"</option>";
-                        $("#product_id").append(option);
-                    }
+                var html = ""
+                $.each(data, function (i, val) { 
+                    html += `<div class="col-md-4">
+                                <div class="card mt-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title"> `+ val.product_name+` </h5>
+                                        <h6 class="card-subtitle mb-2 text-muted"> `+val.title+` </h6>
+                                        <p class="card-text">Kategori :  `+val.category.category_name+` </p>
+                                        <a href="/distributor/`+val.product_name.toLowerCase()+`/`+val.id+`" class="card-link text-center">Detail</a>
+                                    </div>
+                                </div>
+                            </div>`
+                });
+                $("#data-product").append(html)
+
+                if (nextCursor == null) {
+                    $('#load-more').hide();
+                } else {
+                    $('#load-more').show();
                 }
             }
         });
