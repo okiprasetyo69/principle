@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('css/image-uploader.css') }}">
 <style>
     .ellipsis-btn {
         border: none;
@@ -12,6 +13,7 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/image-uploader.js') }}"></script>
 
 @section('content')
 <div class="container">
@@ -112,11 +114,11 @@
                         <label> Deskripsi </label>
                         <textarea class="form-control" id="description" name="description" readonly></textarea>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" id="col-lbl-product">
                         <label> Foto Produk </label>
                     </div>
-                    <div class="col-md-12">
-                        <img id="preview_product_image" src="#" alt="Produk"  class="rounded float-left" style="height: 200px; width: 300px"/>
+                    <div class="col-md-12" id="list-photo-product">
+                       
                     </div>
                 </div>
             </div>
@@ -129,6 +131,7 @@
 
 <script type="text/javascript">
     var table, product_name, distributor_id
+
     $(document).ready(function () {
         loadProduct()
         // getCategory()
@@ -137,6 +140,7 @@
             e.preventDefault()
             window.location.href = '/product/new'
         })
+
 
         // Close Modal
         $("#btn-close").click(function(e){
@@ -217,7 +221,6 @@
                         searchable: false,
                         orderable: false,
                         createdCell: function (td, cellData, rowData, row, col) {
-                            console.log(rowData)
                             var categoryName = ""
                             if(rowData.category_id != null){
                                 categoryName = rowData.category.category_name
@@ -282,7 +285,6 @@
                         searchable: false,
                         orderable: false,
                         createdCell: function (td, cellData, rowData, row, col) {
-                            // var html = "<button type='button' class='btn btn-sm btn-warning' onclick='detail("+rowData.id+")' > Ubah </button> <button type='button' class='btn btn-sm btn-danger' onclick='confirm("+rowData.id+")'> Hapus </button>"
                             var html = `<div class="dropdown">
                                             <button class="ellipsis-btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 &#x22EE;
@@ -311,11 +313,21 @@
             dataType: "JSON",
             success: function (response) {
                 var data = response.data[0]
+                var items = data.items
+                var html = ""
                 $("#productModal").modal("show")
                 $("#title").val(data.title)
-                $("#description").val(data.items[0].description)
-                $("#preview_product_image").attr("src", data.items[0].image_url)
-                console.log(data)
+                $("#description").val(data.description) 
+                $("#list-photo-product").html("")
+                if(items.length != 0){
+                    $.each(items, function (i, val) { 
+                        html += ` <img id="preview_product_image_`+i+`" src="`+val.image_url+`"  class="rounded mb-4" style="height: 150px; width: 250px;"/>`
+                    });
+                    $("#list-photo-product").html(html)
+                } else {
+                    $("#col-lbl-product").hide()
+                    $("#list-photo-product").hide()
+                }
             }
         });
     }

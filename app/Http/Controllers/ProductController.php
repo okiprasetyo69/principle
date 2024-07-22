@@ -12,7 +12,7 @@ class ProductController extends Controller
         return view("principal.product.index");
     }
 
-    public function add(Request $request){
+    public function addProduct(Request $request){
         return view("principal.product.add");
     }
 

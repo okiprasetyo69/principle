@@ -2,9 +2,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('css/image-uploader.css') }}">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/image-uploader.js') }}"></script>
 
 @section('content')
 <div class="container">
@@ -81,12 +83,9 @@
                                         <textarea class="form-control" name="description" id="description"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="">Upload Gambar</label>
-                                    <div class="form-floating">
-                                        <img id="preview_image" src="#" alt="product"  class="rounded float-left" style="height: 200px; width: 300px"/>
-                                        <input class="form-control" type="file" id="image_name">
-                                    </div>
+                                <div class="col-md-12">
+                                    <label for=""> Foto Produk</label>
+                                    <div class="input-images"></div>
                                 </div>
                                 <div class="text-center mt-4">
                                     <button type="submit" class="btn btn-success btn-save">Simpan</button>
@@ -109,22 +108,33 @@
     var product = <?php echo $product ?>
 
     $(document).ready(function () {
-        console.log(product)
+        // console.log(product)
+        let preloaded = []
+        let items = product.items
+
         // assign value
         $("#id").val(product.id)
         $("#product_name").val(product.product_name)
         $("#price").val(product.price)
         $("#qty").val(product.qty)
         $("#title").val(product.title)
-        $("#description").val(product.items[0].description)
-        $('#preview_image').attr('src', product.items[0].image_url);
+        $("#description").val(product.description)
+
+        $.each(items, function (i, val) { 
+            preloaded.push({
+                'id' : val.id,
+                'src' : val.image_url
+            })
+        })
+
+        $('.input-images').imageUploader({
+            label: 'Drag & Drop files here or click to browse',
+            preloaded: preloaded,
+            imagesInputName: 'images',
+            preloadedInputName: 'oldImages',
+        });
 
         getCategory(product.category_id)
-
-        // preview image product
-        $("#image_name").change(function(){
-            readURL(this);
-        });
 
         // submit
         $("#frm-add-product").on("submit", function(e){
@@ -151,27 +161,10 @@
                 return 
             }
 
-            //  set image
-            if($('#image_name').val() == ""){
-                imagName = null
-            } else{
-                imagName = $('#image_name')[0].files[0]
-            }
-
-            var formData = new FormData();
-            formData.append('id', $('#id').val())
-            formData.append('product_name', $('#product_name').val())
-            formData.append("price", $('#price').val())
-            formData.append("qty", $('#qty').val())
-            formData.append("title", $('#title').val())
-            formData.append("description", $('#description').val())
-            formData.append("category_id", $('#category_id option:selected').val())
-            formData.append('image_name', imagName)
-
             $.ajax({
                 type: "POST",
                 url: "/api/product/update",
-                data: formData,
+                data: new FormData(this),
                 dataType: "JSON",
                 contentType: false,
                 processData: false,
@@ -224,15 +217,6 @@
         });
     }
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#preview_image').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

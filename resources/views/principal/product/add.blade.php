@@ -2,9 +2,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('css/image-uploader.css') }}">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/image-uploader.js') }}"></script>
 
 @section('content')
 <div class="container">
@@ -80,12 +82,9 @@
                                         <textarea class="form-control" name="description" id="description"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="">Upload Gambar</label>
-                                    <div class="form-floating">
-                                        <img id="preview_image" src="#" alt="product"  class="rounded float-left" style="height: 200px; width: 300px"/>
-                                        <input class="form-control" type="file" id="image_name">
-                                    </div>
+                                <div class="col-md-12">
+                                    <label for="">Upload Foto Produk </label>
+                                    <div class="input-images"></div>
                                 </div>
                                 <div class="text-center mt-4">
                                     <button type="submit" class="btn btn-success btn-save">Simpan</button>
@@ -109,9 +108,12 @@
 
         getCategory()
 
-        // preview image product
-        $("#image_name").change(function(){
-            readURL(this);
+        let preloaded = []
+        $('.input-images').imageUploader({
+            label: 'Drag & Drop files here or click to browse',
+            preloaded: preloaded,
+            imagesInputName: 'images',
+            preloadedInputName: 'oldImages',
         });
 
         // submit
@@ -139,26 +141,10 @@
                 return 
             }
 
-            //  set image
-            if($('#image_name').val() == ""){
-                imagName = null
-            } else{
-                imagName = $('#image_name')[0].files[0]
-            }
-
-            var formData = new FormData();
-            formData.append('product_name', $('#product_name').val())
-            formData.append("price", $('#price').val())
-            formData.append("qty", $('#qty').val())
-            formData.append("title", $('#title').val())
-            formData.append("description", $('#description').val())
-            formData.append("category_id", $('#category_id option:selected').val())
-            formData.append('image_name', imagName)
-
             $.ajax({
                 type: "POST",
                 url: "/api/product",
-                data: formData,
+                data: new FormData(this),
                 dataType: "JSON",
                 contentType: false,
                 processData: false,

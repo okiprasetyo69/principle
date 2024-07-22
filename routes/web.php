@@ -31,9 +31,10 @@ Route::get('/list-distributor', [PrincipalController::class, 'listDistributor'])
 Route::get('/distributor/stock/{id}', [PrincipalController::class, 'monitorStockOnDistributor'])->name('principal.distributor.stock')->middleware('principal');
 
 Route::get('/category', [CategoryController::class, 'index'])->name('category')->middleware('principal');
+
 Route::get('/product', [ProductController::class, 'index'])->name('product')->middleware('principal');
+Route::get('/product/new', [ProductController::class, 'addProduct'])->name('product.new')->middleware('principal');
 Route::get('/product/{id}', [ProductController::class, 'edit'])->name('product.edit')->middleware('principal');
-Route::get('/product/new', [ProductController::class, 'add'])->name('product.new')->middleware('principal');
 
 Route::get('/distributor', [DistributorController::class, 'index'])->name('distributor')->middleware('distributor');
 Route::get('/distributor/stock', [DistributorController::class, 'distributorStock'])->name('distributor.stock')->middleware('distributor');

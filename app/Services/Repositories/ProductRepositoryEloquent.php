@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Arr;
 
 class ProductRepositoryEloquent implements ProductService {
     /**
@@ -57,18 +58,8 @@ class ProductRepositoryEloquent implements ProductService {
 
     public function create(Request $request){
         try{
-
             $product = $this->product;
             $product->fill($request->all());
-
-            $imageName = "";
-            if($request->hasFile('image_name')){
-                // add new file
-                $file = $request->file('image_name');
-                $imageName = $file->getClientOriginalName();
-                $image['filePath'] = $imageName;
-                $file->move(public_path().'/uploads/product/', $imageName);
-            }
 
             $product->product_name = $request->product_name;
             $product->title = $request->title;
@@ -76,14 +67,22 @@ class ProductRepositoryEloquent implements ProductService {
             $product->category_id = $request->category_id;
             $product->qty = $request->qty;
             $product->total_price = (int) $request->qty * (int) $request->price;
+            $product->description = $request->description;
             $product->save();
 
-            $productDetail = new ProductDetail();
-            $productDetail->product_id = $product->id;
-            $productDetail->image_name = $imageName;
-            $productDetail->description = $request->description;
+            $imageNames = [];
+            if($request->hasfile('images')){
 
-            $productDetail->save();
+                foreach($request->file('images') as $file){
+                    $imageName = time().'_'.str_replace(' ', '_', $file->getClientOriginalName());
+                    $file->move(public_path().'/uploads/product/', $imageName);
+                    $imageNames[] = $imageName;
+                    ProductDetail::create([
+                        'product_id' => $product->id,
+                        'image_name' => $imageName
+                    ]);
+                }
+            }
 
             return response()->json([
                 'status' => 200,
@@ -99,6 +98,7 @@ class ProductRepositoryEloquent implements ProductService {
 
     public function update(Request $request){
         try{
+            // dd($request->id);
             $product = $this->product;
             $product->fill($request->all());
 
@@ -111,37 +111,39 @@ class ProductRepositoryEloquent implements ProductService {
                 ]);
             }
 
-            $imageName = "";
-            $productDetail = ProductDetail::where("product_id", $product->id)->first();
-
-            if($request->hasFile('image_name')){
-
-                $existFile = File::exists(public_path('uploads/product/'.$productDetail->image_name.'')); 
-                
-                if($existFile){
-                    File::delete(public_path('uploads/product/'.$productDetail->image_name.''));
-                }
-
-                $file = $request->file('image_name');
-                $imageName = $file->getClientOriginalName();
-                $image['filePath'] = $imageName;
-                $file->move(public_path().'/uploads/product/', $imageName);
-            } else {
-                $imageName = $productDetail->image_name;
-            }
-
             $product->product_name = $request->product_name;
             $product->title = $request->title;
             $product->price = $request->price;
             $product->category_id = $request->category_id;
             $product->qty = $request->qty;
             $product->total_price = (int) $request->qty * (int) $request->price;
+            $product->description = $request->description;
             $product->save();
 
-            $productDetail->product_id = $product->id;
-            $productDetail->image_name = $imageName;
-            $productDetail->description = $request->description;
-            $productDetail->save();
+            $productDetail = ProductDetail::where("product_id", $request->id)->get();
+            $imageNames = [];
+            if($request->hasfile('images')){
+                //remove exist file
+                if($productDetail != null){
+                    foreach ($productDetail as $key => $value) {
+                        $existFile = File::exists(public_path('uploads/product/'.$value->image_name.'')); 
+                        if($existFile){
+                            File::delete(public_path('uploads/product/'.$value->image_name.''));
+                            $productDetail[$key]->delete();
+                        }
+                    }
+                }
+
+                foreach($request->file('images') as $file){
+                    $imageName = time().'_'.str_replace(' ', '_', $file->getClientOriginalName());
+                    $file->move(public_path().'/uploads/product/', $imageName);
+                    $imageNames[] = $imageName;
+                    ProductDetail::create([
+                        'product_id' => $product->id,
+                        'image_name' => $imageName
+                    ]);
+                }
+            }
 
             return response()->json([
                 'status' => 200,
