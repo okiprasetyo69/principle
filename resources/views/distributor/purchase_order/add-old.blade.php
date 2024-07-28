@@ -33,7 +33,8 @@
                         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                             <div class="navbar-nav">
                                 <a class="nav-item nav-link" href="/distributor"> Halaman utama</a>
-                                <a class="nav-item nav-link" href="/distributor/stock"> Stock</a>
+                                <a class="nav-item nav-link active" href="/distributor/stock"> Stock</a>
+                                <a class="nav-item nav-link active" href="/distributor/product"> Product</a>
                                 <a class="nav-item nav-link" href="/distributor/purhcase-order">Purchase Order</a>
                                 <a class="nav-item nav-link active" href="/distributor/purhcase-order/new">Tambah</a>                          
                             </div>

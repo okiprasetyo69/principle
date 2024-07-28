@@ -35,6 +35,7 @@
                             <div class="navbar-nav">
                                 <a class="nav-item nav-link" href="/distributor"> Halaman utama</a>
                                 <a class="nav-item nav-link active" href="/distributor/stock"> Stock</a>
+                                <a class="nav-item nav-link active" href="/distributor/product"> Product</a>
                                 <a class="nav-item nav-link" href="/distributor/purchase-order">Purchase Order</a>                          
                             </div>
                         </div>

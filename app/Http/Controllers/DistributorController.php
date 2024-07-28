@@ -25,7 +25,12 @@ class DistributorController extends Controller
         return view("distributor.index");
     }
 
-    public function distributorStock(Request $request){
+    public function listStock(Request $request){
+        $user = Auth::user();
+        return view("distributor.stock.index", compact("user"));
+    }
+
+    public function listProduct(Request $request){
         $user = Auth::user();
         $query = Product::query();
 
@@ -35,7 +40,7 @@ class DistributorController extends Controller
         
         $data = $query->with('category', 'items')->cursorPaginate(9);
         
-        return view("distributor.stock.index", compact("data", "user"));
+        return view("distributor.product.index", compact("data", "user"));
     }
 
     public function loadMoreProductPaginate(Request $request){    
@@ -55,7 +60,7 @@ class DistributorController extends Controller
     public function detailProduct(Request $request){
         $user = Auth::user();
         $product = Product::with('category', 'items')->where("product_name", $request->product_name)->where("id", $request->id)->first();
-        return view("distributor.stock.detail_product", compact("product", "user"));
+        return view("distributor.product.detail_product", compact("product", "user"));
     }
 
     public function distributorPurchaseOrder(Request $request){

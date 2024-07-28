@@ -35,6 +35,7 @@
                                 <a class="nav-item nav-link active" href="/category"> Category <span class="sr-only">(current)</span></a>
                                 <a class="nav-item nav-link" href="/product">Product</a>
                                 <a class="nav-item nav-link" href="/list-distributor">Distributor</a>
+                                <a class="nav-item nav-link" href="/principal/stock">Stock</a>
                             </div>
                         </div>
                     </nav>

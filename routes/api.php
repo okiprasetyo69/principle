@@ -58,5 +58,7 @@ Route::controller(PurchaseOrderApiController::class)->group(function() {
 // Distributor Stock
 Route::controller(DistributorStockApiController::class)->group(function() {
     Route::get('/distributor/stock', 'getDistributorStockItem')->name('distributor.stock');
+    Route::post('/distributor/stock', 'create')->name('category.register');
+    Route::delete('/distributor/stock', 'delete')->name('distributor.stock.delete');
     Route::get('/stock/per-distributor', 'getStockPerDistributor')->name('stock.per-distributor');
 });

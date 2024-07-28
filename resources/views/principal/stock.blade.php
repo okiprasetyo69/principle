@@ -35,14 +35,14 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            Monitor Stock Distributor {{$distributor->company_name}}
+                            Management Stock
                         </div>
                     </div>
-
+                    
                     <div class="row mt-2">
                         <div class="col-md-4">
                             <label> Cari Produk </label>
-                            <select name="product_id" id="product_id" class="form-control"> 
+                            <select name="filter_product_id" id="filter_product_id" class="form-control"> 
                                 <option value=""> - Pilih Produk - </option>
                             </select>
                         </div>
@@ -52,12 +52,13 @@
                         
                         <div class="col-md-12 mt-2">
                             <div class="responsive">
-                                <table class="table table-hover" id="distributor-stock-table">
+                                <table class="table table-hover" id="stock-table">
                                     <thead>
                                         <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Produk</th>
-                                        <th scope="col">Qty</th>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Produk</th>
+                                            <th scope="col">Qty</th>
+                                            <th scope="col">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -66,113 +67,60 @@
                                 </table>
                             </div>
                     </div>
-                
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="stockModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Tambah Stock</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label> Cari Produk </label>
+                        <select name="product_id" id="product_id" class="form-control"> 
+                             <option value=""> - Pilih Produk - </option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label> Email </label>
+                        <input type="text" class="form-control" id="email" name="email" readonly />
+                    </div>
+                    <div class="col-md-12">
+                        <label> Telepon </label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" readonly />
+                    </div>
+                    <div class="col-md-12">
+                        <label> Alamat </label>
+                        <textarea class="form-control" id="address" name="address" readonly></textarea>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 <script type="text/javascript"> 
-    var table, product_id
 
+    var table
     $(document).ready(function () {
-
-        getStockOnDistributor()
         getProduct()
-
-        $("#product_id").on("change", function(e){
-            e.preventDefault()
-            product_id =  $("#product_id option:selected").val()
-            getStockOnDistributor(product_id)
-        })
     });
-
-    function getStockOnDistributor(product_id = null){
-        if (table != null) {
-            table.destroy();
-        }
-
-        table =  $("#distributor-stock-table").DataTable(
-           {
-                lengthChange: false,
-                searching: false,
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                bAutoWidth: true,
-                scrollCollapse : true,
-                ordering: false,
-                language: {
-                emptyTable: "Data tidak tersedia",
-                zeroRecords: "Tidak ada data yang ditemukan",
-                infoFiltered: "",
-                infoEmpty: "",
-                paginate: {
-                    previous: "‹",
-                    next: "›",
-                },
-                info: "Menampilkan _START_ dari _END_ dari _TOTAL_ Produk",
-                aria: {
-                        paginate: {
-                            previous: "Previous",
-                            next: "Next",
-                        },
-                    },
-                },
-                ajax:{
-                    url :  '/api/distributor/stock',
-                    type: "GET",
-                    data: {
-                        product_id: product_id,
-                    }
-                },
-                columns: [
-                    { data: null,  width: "5%",},
-                    { data: null, },
-                    { data: null },
-                ],
-                columnDefs: [
-                    {
-                        targets: 0,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).addClass("text-center");
-                            $(td).html(table.page.info().start + row + 1);
-                        },
-                    },
-                    {
-                        targets: 1,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            var product = ""
-                            if(rowData.product_id != null){
-                                product = rowData.product.product_name
-                            } else {
-                                product = "-"
-                            }
-                            $(td).html(product);
-                        },
-                    },
-                    {
-                        targets: 2,
-                        searchable: false,
-                        orderable: false,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            var qty = 0
-                            if(rowData.qty != null){
-                                qty = rowData.qty.toLocaleString('id-ID')
-                            }
-                            $(td).html(qty);
-                        },
-                    },
-                ]
-           }
-        )
-    }
 
     function getProduct(product_id = null){
         $.ajax({
@@ -183,6 +131,7 @@
             success: function (response) {
                 var data = response.data
                 $("#product_id").html("");
+                $("#filter_product_id").html("");
                 var len = 0;
                 if(response['data'] != null) {
                     len = response['data'].length
@@ -195,11 +144,13 @@
                         }
                         var option = "<option value='"+id+"' "+selected+">"+product_name+"</option>";
                         $("#product_id").append(option);
+                        $("#filter_product_id").append(option);
                     }
                 }
             }
         });
     }
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

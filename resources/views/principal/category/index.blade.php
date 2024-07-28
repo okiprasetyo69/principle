@@ -27,6 +27,7 @@
                                 <a class="nav-item nav-link active" href="/category"> Category </a>
                                 <a class="nav-item nav-link" href="/product">Product</a>
                                 <a class="nav-item nav-link" href="/list-distributor">Distributor</a>
+                                <a class="nav-item nav-link" href="/principal/stock">Stock</a>
                             </div>
                         </div>
                     </nav>

@@ -50,4 +50,54 @@ class DistributorStockApiController extends BaseController
         }
     }
 
+    public function create(Request $request){
+        try{
+            $validator = Validator::make($request->all(), [
+                'user_id' => 'required',
+                'product_id' => 'required',
+                'qty' => 'required',
+            ]);
+            
+            if($validator->fails()){
+                return response()->json([
+                    'data' => null,
+                    'message' => $validator->errors(),
+                    'status' => 400
+                ]);
+            }
+
+            $distributorStock = $this->service->create($request);
+            if($distributorStock){
+                return $distributorStock;
+            }
+        }catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+        }
+    }
+
+    public function delete(Request $request){
+        try{
+            $validator = Validator::make($request->all(), [
+                'id' => 'required',
+            ]);
+            
+            if($validator->fails()){
+                return response()->json([
+                    'data' => null,
+                    'message' => $validator->errors(),
+                    'status' => 400
+                ]);
+            }
+
+            $distributorStock = $this->service->delete($request);
+            if($distributorStock){
+                return $distributorStock;
+            }
+        }catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+        }
+    }
+
 }

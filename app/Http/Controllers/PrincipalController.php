@@ -19,4 +19,8 @@ class PrincipalController extends Controller
         $distributor = User::find($request->id);
         return view("principal.distributor-stock", compact('distributor'));
     }
+
+    public function principalStock(Request $request){
+        return view("principal.stock");
+    }
 }

@@ -27,6 +27,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 Route::get('/principal', [PrincipalController::class, 'index'])->name('principal')->middleware('principal');
+Route::get('/principal/stock', [PrincipalController::class, 'principalStock'])->name('principal.stock')->middleware('principal');
 Route::get('/list-distributor', [PrincipalController::class, 'listDistributor'])->name('principal.list-distributor')->middleware('principal');
 Route::get('/distributor/stock/{id}', [PrincipalController::class, 'monitorStockOnDistributor'])->name('principal.distributor.stock')->middleware('principal');
 
@@ -37,7 +38,8 @@ Route::get('/product/new', [ProductController::class, 'addProduct'])->name('prod
 Route::get('/product/{id}', [ProductController::class, 'edit'])->name('product.edit')->middleware('principal');
 
 Route::get('/distributor', [DistributorController::class, 'index'])->name('distributor')->middleware('distributor');
-Route::get('/distributor/stock', [DistributorController::class, 'distributorStock'])->name('distributor.stock')->middleware('distributor');
+Route::get('/distributor/product', [DistributorController::class, 'listProduct'])->name('distributor.product')->middleware('distributor');
+Route::get('/distributor/stock', [DistributorController::class, 'listStock'])->name('distributor.stock')->middleware('distributor');
 Route::get('/distributor/product/load-more', [DistributorController::class, 'loadMoreProductPaginate'])->name('distributor.product.load-more')->middleware('distributor');
 Route::get('/distributor/purchase-order', [DistributorController::class, 'distributorPurchaseOrder'])->name('distributor.purhcase-order')->middleware('distributor');
 Route::get('/distributor/purchase-order/new', [DistributorController::class, 'addPurchaseOrder'])->name('distributor.purhcase-order.add')->middleware('distributor');

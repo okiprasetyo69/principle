@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Observers\DistibutorObserver;
+use App\Observers\PrincipalObserver;
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Pagination\Paginator;
@@ -53,5 +57,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap(); 
+        User::observe(DistibutorObserver::class);
+        User::observe(PrincipalObserver::class);
     }
 }
