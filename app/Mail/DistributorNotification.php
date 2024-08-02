@@ -17,10 +17,12 @@ class DistributorNotification extends Mailable
      * Create a new message instance.
      */
     public $user;
+    public $product;
 
-    public function __construct($user)
+    public function __construct($user, $product)
     {
         $this->user = $user;
+        $this->product = $product;
     }
 
     /**
@@ -30,6 +32,7 @@ class DistributorNotification extends Mailable
     {
         return new Envelope(
             subject: 'Distributor Notification',
+            from: env('MAIL_FROM_ADDRESS')
         );
     }
 
@@ -39,7 +42,11 @@ class DistributorNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'emails.distributor_stock_alert',
+            with: [
+                'user' => $this->user,
+                'product' => $this->product,
+            ]
         );
     }
 
@@ -56,6 +63,10 @@ class DistributorNotification extends Mailable
     public function build()
     {
         return $this->view('emails.distributor_stock_alert')
-                    ->with(['user' => $this->user]);
+                    ->subject('Distributor Notification !')
+                    ->with([
+                        'user' => $this->user,
+                        'product' => $this->product
+                    ]);
     }
 }

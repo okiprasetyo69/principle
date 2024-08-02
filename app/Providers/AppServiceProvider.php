@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Models\DistributorStock;
 use App\Observers\DistibutorObserver;
 use App\Observers\PrincipalObserver;
 
@@ -57,7 +58,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap(); 
-        User::observe(DistibutorObserver::class);
-        User::observe(PrincipalObserver::class);
+        DistributorStock::observe(DistibutorObserver::class);
+        DistributorStock::observe(PrincipalObserver::class);
     }
 }

@@ -13,14 +13,17 @@ class PrincipalMailNotification extends Mailable
 {
     use Queueable, SerializesModels;
     
-    public $user;
-
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public $user;
+    public $product;
+    public $distributor;
+
+    public function __construct($user, $product)
     {
         $this->user = $user;
+        $this->product = $product;
     }
 
     /**
@@ -29,7 +32,8 @@ class PrincipalMailNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Principal Mail Notification',
+            subject: 'Principal Notification',
+            from: env('MAIL_FROM_ADDRESS')
         );
     }
 
@@ -39,7 +43,11 @@ class PrincipalMailNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'emails.principal_stock_alert',
+            with: [
+                'user' => $this->user,
+                'product' => $this->product,
+            ]
         );
     }
 
@@ -55,8 +63,11 @@ class PrincipalMailNotification extends Mailable
 
     public function build()
     {
-        return $this->subject('Pemberitahuan')
-                    ->view('emails.principal_stock_alert')
-                    ->with(['user' => $this->user]);
+        return $this->view('emails.principal_stock_alert')
+                    ->subject('Principal Notification !')
+                    ->with([
+                        'user' => $this->user,
+                        'product' => $this->product
+                    ]);
     }
 }
