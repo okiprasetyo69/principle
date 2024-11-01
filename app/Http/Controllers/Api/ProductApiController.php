@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 use App\Http\Controllers\Controller as BaseController;
+use Illuminate\Support\Facades\Storage;
 
 use App\Services\Interfaces\ProductService;
 
@@ -139,4 +140,36 @@ class ProductApiController extends BaseController
         }
     }    
 
+    public function createSignature(Request $request){
+        try{
+            // Ambil data gambar dari permintaan
+            $imageData = $request->input('canvas1');
+            // $imageData2 = $request->input('canvas2');
+
+            // Hapus bagian "data:image/png;base64,"
+            $imageData = str_replace('data:image/png;base64,', '', $imageData);
+            // $imageData = str_replace(' ', '+', $imageData);
+
+            // $imageData2 = str_replace('data:image/png;base64,', '', $imageData2);
+            // $imageData2 = str_replace(' ', '+', $imageData2);
+
+            // Decode data base64 menjadi binary
+            $image = base64_decode($imageData);
+            // $image2 = base64_decode($imageData2);
+
+            // Tentukan path file penyimpanan
+            $filePath = 'signatures/'.$request->id.'.png';
+            // $filePath2 = 'signatures/' . uniqid() .'-2'. '.png';
+
+            // Simpan file ke storage public
+            Storage::put('public/uploads/'.$filePath , $image);
+            // Storage::put('uploads/'.$filePath2 , $image2);
+
+            // Kirim respon sukses
+            return response()->json(['success' => true, 'path' => $filePath]);
+        } catch(Exception $ex){
+            Log::error($ex->getMessage());
+            return false;
+        }
+    }
 }

@@ -18,7 +18,6 @@ class PrincipalMailNotification extends Mailable
      */
     public $user;
     public $product;
-    public $distributor;
 
     public function __construct($user, $product)
     {

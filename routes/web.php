@@ -35,6 +35,7 @@ Route::get('/category', [CategoryController::class, 'index'])->name('category')-
 
 Route::get('/product', [ProductController::class, 'index'])->name('product')->middleware('principal');
 Route::get('/product/new', [ProductController::class, 'addProduct'])->name('product.new')->middleware('principal');
+Route::get('/product/signature', [ProductController::class, 'signature'])->name('product.signature')->middleware('principal');
 Route::get('/product/{id}', [ProductController::class, 'edit'])->name('product.edit')->middleware('principal');
 
 Route::get('/distributor', [DistributorController::class, 'index'])->name('distributor')->middleware('distributor');

@@ -29,7 +29,12 @@ class DistibutorObserver
      */
     public function created(DistributorNotification $distributorStock)
     {
-        //
+        if($distributorStock->qty <= StockConstantInterface::STOCK_MINIMUM){
+            $user = $this->user::where("id", $distributorStock->user_id)->first();
+            $product = $this->product::where("id", $distributorStock->product_id)->first();
+            // SEND MAIL
+            $sendMail = Mail::to($user->email)->send(new DistributorNotification($user, $product));
+        }
     }
 
     /**

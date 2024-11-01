@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.home')
+@section('title','Product')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
@@ -14,78 +15,80 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header"> Halaman Distributor </div>
-
-                <div class="card-body">
-                   
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                            <div class="navbar-nav">
-                                <a class="nav-item nav-link" href="/distributor"> Halaman utama</a>
-                                <a class="nav-item nav-link active" href="/distributor/stock"> Stock</a>
-                                <a class="nav-item nav-link active" href="/distributor/product"> Product</a>
-                                <a class="nav-item nav-link" href="/distributor/purchase-order">Purchase Order</a>                          
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Management Inventory</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item ">
+                    <a href="#">Inventory</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Produk</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a href="#">Detail</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section dashboard">
+        <div class="row">
+            <div class="col-md-12"> 
+                <div class="card">
+                    <div class="card-body"> 
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        <div class="row mt-4"> 
+                            <div class="col-md-4">
+                                Detail Produk
                             </div>
                         </div>
-                    </nav>
-                    <div class="row">
-                        <div class="col-md-4">
-                            Detail Produk
-                        </div>
-                    </div>
-                    <div class="row">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            @foreach ($product->items as $key => $value)
-                                <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
-                            @endforeach
-                        </ol>
-                        <div class="carousel-inner">
-                            @foreach ($product->items  as $key => $value)
-                                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                    <img class="d-block w-100" src="{{ $value->image_url }}" alt="Image {{ $key + 1 }}" height="250px;" width="300px;">
+                        <div class="row mt-4"> 
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    @foreach ($product->items as $key => $value)
+                                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
+                                    @endforeach
+                                </ol>
+                                <div class="carousel-inner">
+                                    @foreach ($product->items  as $key => $value)
+                                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                            <img class="d-block w-100" src="{{ $value->image_url }}" alt="Image {{ $key + 1 }}" height="250px;" width="300px;">
+                                        </div>
+                                    @endforeach
                                 </div>
-                            @endforeach
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                    </div>
-                    <div class="row mt-2">
-                        <ul class="list-group">
-                            <li class="list-group-item active">Produk : {{ $product->product_name}} </li>
-                            <li class="list-group-item">Judul : {{ $product->title}} </li>
-                            <li class="list-group-item">Harga : Rp. {{ number_format($product->price, 0, '', '.');}}</li>
-                            <li class="list-group-item">Keterangan : {{ $product->description }} </li>
-                            <li class="list-group-item">Kategori : {{ $product->category->category_name}}</li>
-                            <li class="list-group-item">
-                                <button type="button" class="btn btn-sm btn-info" onclick="orderNow()"> PO </button>
-                            </li>
-                        </ul>
+                        <div class="row mt-4"> 
+                            <ul class="list-group">
+                                <li class="list-group-item active">Produk : {{ $product->product_name}} </li>
+                                <li class="list-group-item">Judul : {{ $product->title}} </li>
+                                <li class="list-group-item">Harga : Rp. {{ number_format($product->price, 0, '', '.');}}</li>
+                                <li class="list-group-item">Keterangan : {{ $product->description }} </li>
+                                <li class="list-group-item">Kategori : {{ $product->category->category_name}}</li>
+                                <li class="list-group-item">
+                                    <button type="button" class="btn btn-sm btn-info" onclick="orderNow()"> PO </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+</main>
 
 <!-- Modal -->
 <div class="modal fade" id="purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -124,10 +127,8 @@
     </div>
 </div>
 
-@endsection
 <script type="text/javascript">
     
-
     $(document).ready(function () {
     
         // Close Modal
@@ -195,3 +196,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+@endsection
+@section('pagespecificscripts')
+   
+@stop

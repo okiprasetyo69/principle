@@ -4,8 +4,11 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Models\DistributorStock;
+use App\Models\PurchaseOrder;
+
 use App\Observers\DistibutorObserver;
 use App\Observers\PrincipalObserver;
+use App\Observers\PurchaseOrderObserver;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -60,5 +63,6 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap(); 
         DistributorStock::observe(DistibutorObserver::class);
         DistributorStock::observe(PrincipalObserver::class);
+        PurchaseOrder::observe(PurchaseOrderObserver::class);
     }
 }

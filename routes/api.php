@@ -42,6 +42,9 @@ Route::controller(CategoryApiController::class)->group(function() {
 Route::controller(ProductApiController::class)->group(function() {
     Route::get('/product', 'getProduct')->name('product.data');
     Route::post('/product', 'create')->name('product.create');
+
+    Route::post('/product/signature', 'createSignature')->name('product.create.signature');
+
     Route::post('/product/update', 'update')->name('product.update');
     Route::get('/product/{id}', 'detail')->name('product.detail');
     Route::delete('/product', 'delete')->name('product.delete');

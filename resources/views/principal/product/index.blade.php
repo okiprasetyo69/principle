@@ -1,4 +1,5 @@
-@extends('layouts.app')
+@extends('layouts.home')
+@section('title','Product')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
@@ -14,56 +15,44 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('js/image-uploader.js') }}"></script>
-
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header"> Halaman Prinsipal </div>
-                    <div class="card-body">
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Management Inventory</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item ">
+                    <a href="#">Inventory</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a href="#">Produk</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section dashboard"> 
+        <div class="row">
+            <div class="col-md-12"> 
+                <div class="card">
+                    <div class="card-body"> 
                         @if (session('status'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('status') }}
                             </div>
                         @endif
-                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                                <div class="navbar-nav">
-                                    <a class="nav-item nav-link" href="/category"> Category </a>
-                                    <a class="nav-item nav-link active" href="/product">Product</a>
-                                    <a class="nav-item nav-link" href="/list-distributor">Distributor</a>
-                                    <a class="nav-item nav-link" href="/principal/stock">Stock</a>
-                                </div>
-                            </div>
-                        </nav>
-                    
-                        <div class="row">
-                            <div class="col-md-4">
-                                Management Product
-                            </div>
-                        </div>
-
-                        <div class="row mt-4">
+                        <div class="row mt-4"> 
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-sm btn-primary btn-add">
                                     Tambah
                                 </button>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" name="filter_product_name" id="filter_product_name" placeholder="Masukkan nama produk" autofocus/>
+                                <input type="text" name="filter_product_name" class="form-control" id="filter_product_name" placeholder="Masukkan nama produk" autofocus/>
                             </div>
-                            <!-- <div class="col-md-4">
-                                <select name="category_id" id="category_id" class="form-control"> 
-                                    <option value=""> -Pilih Kategori-</option>
-                                </selet>
-                            </div> -->
                         </div>
-
-                        <div class="row mt-2">
+                        <div class="row mt-4">
                             <div class="col-md-12 mt-2">
                                 <div class="responsive">
                                     <table class="table table-hover" id="product-table">
@@ -85,15 +74,12 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-@endsection
-
+    </section>
+</main>
 
 <!-- Modal -->
 <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -408,3 +394,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+@endsection
+@section('pagespecificscripts')
+   
+@stop
